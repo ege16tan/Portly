@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from '../hooks/useContainers';
+import { Container } from '../types';
 
 interface Props {
   container: Container;
