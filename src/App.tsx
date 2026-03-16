@@ -7,7 +7,7 @@ import { ServerList } from "./components/ServerList";
 import { Server } from "./types";
 import { AddServerModal } from "./components/AddServerModal";
 import { LogViewer } from "./components/LogViewer";
-import { getCredentials } from "./hooks/useVault";
+import { getCredentials, deleteCredentials } from "./hooks/useVault";
 
 function App() {
   const { containers, loading, error, fetchContainers, controlContainer, getLogs } = useContainers();
@@ -45,6 +45,20 @@ function App() {
     
     hydrate();
   }, []); // Run on mount
+
+  const handleDeleteServer = async (id: string) => {
+    try {
+      await deleteCredentials(id);
+      setManualServers(prev => prev.filter(s => s.id !== id));
+      if (activeServer?.id === id) {
+        setActiveServer(null);
+      }
+    } catch (err) {
+      console.error("Failed to delete server credentials:", err);
+      // Still remove from list if vault fails? Let's be cautious
+      setManualServers(prev => prev.filter(s => s.id !== id));
+    }
+  };
   const [showLogs, setShowLogs] = useState<{ id: string, name: string } | null>(null);
   const [currentLogs, setCurrentLogs] = useState("");
   const [logsLoading, setLogsLoading] = useState(false);
@@ -71,6 +85,7 @@ function App() {
         activeServerId={activeServer?.id || null} 
         onSelectServer={setActiveServer} 
         onAddServer={() => setShowAddServer(true)}
+        onDeleteServer={handleDeleteServer}
       />
 
       <main className="main-content">

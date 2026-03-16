@@ -6,9 +6,10 @@ interface Props {
   activeServerId: string | null;
   onSelectServer: (server: Server) => void;
   onAddServer: () => void;
+  onDeleteServer: (serverId: string) => void;
 }
 
-export const ServerList: React.FC<Props> = ({ servers, activeServerId, onSelectServer, onAddServer }) => {
+export const ServerList: React.FC<Props> = ({ servers, activeServerId, onSelectServer, onAddServer, onDeleteServer }) => {
   return (
     <aside className="sidebar">
       <h2 style={{ color: '#58a6ff', marginBottom: '1.5rem', userSelect: 'none' }}>Portly</h2>
@@ -18,8 +19,11 @@ export const ServerList: React.FC<Props> = ({ servers, activeServerId, onSelectS
           {servers.map((server) => (
             <div 
               key={server.id}
-              onClick={() => onSelectServer(server)}
               style={{ 
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
                 padding: '0.6rem 0.8rem', 
                 background: activeServerId === server.id ? '#1f6feb' : '#21262d', 
                 borderRadius: '6px', 
@@ -28,12 +32,41 @@ export const ServerList: React.FC<Props> = ({ servers, activeServerId, onSelectS
                 fontSize: '0.9rem', 
                 border: activeServerId === server.id ? '1px solid #58a6ff' : '1px solid #30363d',
                 transition: 'all 0.1s ease',
-                display: 'flex',
-                flexDirection: 'column'
               }}
+              onClick={() => onSelectServer(server)}
             >
-              <span style={{ fontWeight: 500 }}>{server.name}</span>
-              <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{server.host}</span>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <span style={{ fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{server.name}</span>
+                <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{server.host}</span>
+              </div>
+              
+              {server.id.startsWith('manual-') && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (confirm(`Möchtest du "${server.name}" wirklich löschen?`)) {
+                      onDeleteServer(server.id);
+                    }
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#8b949e',
+                    padding: '4px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.color = '#f85149')}
+                  onMouseOut={(e) => (e.currentTarget.style.color = '#8b949e')}
+                  title="Server löschen"
+                >
+                  &times;
+                </button>
+              )}
             </div>
           ))}
           {servers.length === 0 && (
