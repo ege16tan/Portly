@@ -7,7 +7,7 @@ export function useContainers() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function fetchContainers(server: any) {
+  async function fetchContainers(server: Server) {
     setLoading(true);
     setError(null);
     try {

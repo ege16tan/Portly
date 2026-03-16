@@ -8,3 +8,7 @@ export async function saveCredentials(serverId: string, creds: Credentials) {
 export async function getCredentials(serverId: string): Promise<Credentials | null> {
   return await invoke("get_credentials", { serverId });
 }
+
+export async function deleteCredentials(serverId: string) {
+  return await invoke("delete_credentials", { serverId });
+}

@@ -7,6 +7,7 @@ import { ServerList } from "./components/ServerList";
 import { Server } from "./types";
 import { AddServerModal } from "./components/AddServerModal";
 import { LogViewer } from "./components/LogViewer";
+import { getCredentials } from "./hooks/useVault";
 
 function App() {
   const { containers, loading, error, fetchContainers, controlContainer, getLogs } = useContainers();
@@ -19,8 +20,31 @@ function App() {
   const [showAddServer, setShowAddServer] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("manual_servers", JSON.stringify(manualServers));
+    // Strip passwords before saving to localStorage
+    const stripped = manualServers.map(({ password, ...rest }: Server) => rest);
+    localStorage.setItem("manual_servers", JSON.stringify(stripped));
   }, [manualServers]);
+
+  useEffect(() => {
+    const hydrate = async () => {
+      let changed = false;
+      const hydrated = await Promise.all(manualServers.map(async (s: Server) => {
+        if (s.password) return s;
+        const creds = await getCredentials(s.id);
+        if (creds?.password) {
+          changed = true;
+          return { ...s, password: creds.password };
+        }
+        return s;
+      }));
+      
+      if (changed) {
+        setManualServers(hydrated);
+      }
+    };
+    
+    hydrate();
+  }, []); // Run on mount
   const [showLogs, setShowLogs] = useState<{ id: string, name: string } | null>(null);
   const [currentLogs, setCurrentLogs] = useState("");
   const [logsLoading, setLogsLoading] = useState(false);
