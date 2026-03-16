@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-
-export interface Container {
-  id: string;
-  name: string;
-  image: string;
-  status: string;
-  state: string;
-  ports: string;
-}
+import { Container, Server } from "../types";
 
 export function useContainers() {
   const [containers, setContainers] = useState<Container[]>([]);

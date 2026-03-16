@@ -4,7 +4,7 @@ import { Container } from '../hooks/useContainers';
 interface Props {
   container: Container;
   onAction: (id: string, action: string) => void;
-  onLogs: (id: string) => void;
+  onLogs: (id: string, name: string) => void;
 }
 
 export const ContainerCard: React.FC<Props> = ({ container, onAction, onLogs }) => {
@@ -24,7 +24,7 @@ export const ContainerCard: React.FC<Props> = ({ container, onAction, onLogs }) 
         <button onClick={() => onAction(container.id, container.state === 'running' ? 'stop' : 'start')}>
           {container.state === 'running' ? 'Stop' : 'Start'}
         </button>
-        <button onClick={() => onLogs(container.id)}>Logs</button>
+        <button onClick={() => onLogs(container.id, container.name)}>Logs</button>
       </div>
     </div>
   );

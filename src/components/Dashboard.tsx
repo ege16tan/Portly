@@ -6,7 +6,7 @@ interface Props {
   containers: Container[];
   loading: boolean;
   onAction: (id: string, action: string) => void;
-  onLogs: (id: string) => void;
+  onLogs: (id: string, name: string) => void;
 }
 
 export const Dashboard: React.FC<Props> = ({ containers, loading, onAction, onLogs }) => {

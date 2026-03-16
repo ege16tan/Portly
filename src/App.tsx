@@ -3,7 +3,8 @@ import "./styles/globals.css";
 import { useContainers } from "./hooks/useContainers";
 import { useDiscovery } from "./hooks/useDiscovery";
 import { Dashboard } from "./components/Dashboard";
-import { ServerList, Server } from "./components/ServerList";
+import { ServerList } from "./components/ServerList";
+import { Server } from "./types";
 import { AddServerModal } from "./components/AddServerModal";
 import { LogViewer } from "./components/LogViewer";
 

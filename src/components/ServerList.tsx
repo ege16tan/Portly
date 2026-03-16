@@ -1,13 +1,5 @@
 import React from 'react';
-
-export interface Server {
-  name: string;
-  host: string;
-  port: number;
-  user: string;
-  id: string;
-  password?: string;
-}
+import { Server } from '../types';
 
 interface Props {
   servers: Server[];
