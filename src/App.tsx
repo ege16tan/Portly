@@ -74,9 +74,6 @@ function App() {
     }
   }, [allServers, activeServer]);
 
-  useEffect(() => {
-    // fetchContainers(server);
-  }, []);
 
   return (
     <div className="root-layout" style={{ display: 'flex', width: '100%', height: '100vh' }}>
