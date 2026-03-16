@@ -1,0 +1,26 @@
+[package]
+name = "portly"
+version = "0.1.0"
+description = "A Tauri App for remote Docker management"
+authors = ["you"]
+edition = "2021"
+
+[lib]
+name = "portly_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+tauri-plugin-stronghold = "2.0.0-rc.0" # Adjust if necessary for stable
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+russh = "0.40" # For SSH connection
+russh-keys = "0.40"
+anyhow = "1.0"
+futures = "0.3"
+
