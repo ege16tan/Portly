@@ -4,12 +4,18 @@ import { useContainers } from "./hooks/useContainers";
 import { useDiscovery } from "./hooks/useDiscovery";
 import { Dashboard } from "./components/Dashboard";
 import { ServerList, Server } from "./components/ServerList";
+import { AddServerModal } from "./components/AddServerModal";
+import { LogViewer } from "./components/LogViewer";
 
 function App() {
-  const { containers, loading, error, fetchContainers, controlContainer } = useContainers();
+  const { containers, loading, error, fetchContainers, controlContainer, getLogs } = useContainers();
   const { discoveredServers } = useDiscovery();
   const [manualServers, setManualServers] = useState<Server[]>([]);
   const [activeServer, setActiveServer] = useState<Server | null>(null);
+  const [showAddServer, setShowAddServer] = useState(false);
+  const [showLogs, setShowLogs] = useState<{ id: string, name: string } | null>(null);
+  const [currentLogs, setCurrentLogs] = useState("");
+  const [logsLoading, setLogsLoading] = useState(false);
 
   const allServers = useMemo(() => {
     // Basic deduplication could be added here
@@ -32,7 +38,7 @@ function App() {
         servers={allServers} 
         activeServerId={activeServer?.id || null} 
         onSelectServer={setActiveServer} 
-        onAddServer={() => console.log('Add server')}
+        onAddServer={() => setShowAddServer(true)}
       />
 
       <main className="main-content">
@@ -44,7 +50,7 @@ function App() {
             </div>
           </div>
           <button 
-            onClick={() => activeServer && fetchContainers({ ...activeServer, password: 'password' })} 
+            onClick={() => activeServer && fetchContainers({ ...activeServer, password: activeServer.password })} 
             className="primary" 
             disabled={loading || !activeServer}
           >
@@ -62,11 +68,38 @@ function App() {
           <Dashboard 
             containers={containers} 
             loading={loading} 
-            onAction={(id: string, action: string) => activeServer && controlContainer({ ...activeServer, password: 'password' }, id, action)}
-            onLogs={(id: string) => console.log('Show logs for', id)}
+            onAction={(id: string, action: string) => activeServer && controlContainer({ ...activeServer, password: activeServer.password }, id, action)}
+            onLogs={async (id: string, name: string) => {
+              if (activeServer) {
+                setShowLogs({ id, name });
+                setLogsLoading(true);
+                const logs = await getLogs({ ...activeServer, password: activeServer.password }, id);
+                setCurrentLogs(logs);
+                setLogsLoading(false);
+              }
+            }}
           />
         </div>
       </main>
+
+      {showAddServer && (
+        <AddServerModal
+          onAdd={(server) => setManualServers(prev => [...prev, server])}
+          onClose={() => setShowAddServer(false)}
+        />
+      )}
+
+      {showLogs && (
+        <LogViewer
+          containerName={showLogs.name}
+          logs={currentLogs}
+          loading={logsLoading}
+          onClose={() => {
+            setShowLogs(null);
+            setCurrentLogs("");
+          }}
+        />
+      )}
     </div>
   );
 }

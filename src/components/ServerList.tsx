@@ -6,6 +6,7 @@ export interface Server {
   port: number;
   user: string;
   id: string;
+  password?: string;
 }
 
 interface Props {

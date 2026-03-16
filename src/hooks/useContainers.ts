@@ -28,7 +28,7 @@ export function useContainers() {
     }
   }
 
-  async function controlContainer(server: any, id: string, action: string) {
+  async function controlContainer(server: Server, id: string, action: string) {
     try {
       await invoke("control_container", { ...server, id, action });
       await fetchContainers(server);
@@ -37,5 +37,21 @@ export function useContainers() {
     }
   }
 
-  return { containers, loading, error, fetchContainers, controlContainer };
+  const getLogs = async (server: Server, id: string, tail: number = 100) => {
+    try {
+      return await invoke<string>("get_logs", {
+        host: server.host,
+        port: server.port,
+        user: server.user,
+        password: server.password,
+        id,
+        tail
+      });
+    } catch (err) {
+      console.error("Failed to fetch logs:", err);
+      return `Error fetching logs: ${err}`;
+    }
+  };
+
+  return { containers, loading, error, fetchContainers, controlContainer, getLogs };
 }
