@@ -68,6 +68,16 @@ async fn get_logs(
         .map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+async fn delete_credentials(
+    app: tauri::AppHandle,
+    server_id: String,
+) -> Result<(), String> {
+    vault::delete_credentials(app, &server_id)
+        .await
+        .map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -89,7 +99,8 @@ pub fn run() {
             control_container,
             get_logs,
             save_credentials,
-            get_credentials
+            get_credentials,
+            delete_credentials
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

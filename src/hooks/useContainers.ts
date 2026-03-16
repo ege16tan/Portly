@@ -22,9 +22,12 @@ export function useContainers() {
 
   async function controlContainer(server: Server, id: string, action: string) {
     try {
+      console.log(`${action}ing container ${id}...`);
       await invoke("control_container", { ...server, id, action });
+      console.log(`Successfully ${action}ed container ${id}`);
       await fetchContainers(server);
     } catch (e: any) {
+      console.error(`Failed to ${action} container ${id}:`, e);
       setError(e.toString());
     }
   }

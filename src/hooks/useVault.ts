@@ -1,9 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-
-export interface Credentials {
-  username: string;
-  password?: string;
-}
+import { Credentials } from "../types";
 
 export async function saveCredentials(serverId: string, creds: Credentials) {
   return await invoke("save_credentials", { serverId, creds });

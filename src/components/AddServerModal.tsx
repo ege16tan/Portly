@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Server } from './ServerList';
+import { Server } from '../types';
+import { saveCredentials } from '../hooks/useVault';
 
 interface Props {
   onAdd: (server: Server) => void;
@@ -13,15 +14,26 @@ export const AddServerModal: React.FC<Props> = ({ onAdd, onClose }) => {
   const [user, setUser] = useState('root');
   const [password, setPassword] = useState('');
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!host || !user) return;
+    
+    const id = `manual-${host}`;
+    
+    if (password) {
+      try {
+        await saveCredentials(id, { username: user, password });
+      } catch (err) {
+        console.error("Failed to save credentials:", err);
+      }
+    }
+
     onAdd({
-      id: `manual-${host}`,
+      id,
       name: name || host,
       host,
       port: parseInt(port),
       user,
-      password,
+      password, // Password is kept in state for immediate connection, but persisted in Stronghold
     });
     onClose();
   };

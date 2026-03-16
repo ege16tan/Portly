@@ -11,9 +11,16 @@ import { LogViewer } from "./components/LogViewer";
 function App() {
   const { containers, loading, error, fetchContainers, controlContainer, getLogs } = useContainers();
   const { discoveredServers } = useDiscovery();
-  const [manualServers, setManualServers] = useState<Server[]>([]);
+  const [manualServers, setManualServers] = useState<Server[]>(() => {
+    const saved = localStorage.getItem("manual_servers");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [activeServer, setActiveServer] = useState<Server | null>(null);
   const [showAddServer, setShowAddServer] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("manual_servers", JSON.stringify(manualServers));
+  }, [manualServers]);
   const [showLogs, setShowLogs] = useState<{ id: string, name: string } | null>(null);
   const [currentLogs, setCurrentLogs] = useState("");
   const [logsLoading, setLogsLoading] = useState(false);

@@ -15,3 +15,8 @@ export interface Server {
   user: string;
   password?: string;
 }
+
+export interface Credentials {
+  username: string;
+  password?: string;
+}

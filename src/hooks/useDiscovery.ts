@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { listen } from "@tauri-apps/api/event";
-import { Server } from "../components/ServerList";
+import { Server } from "../types";
 
 interface Beacon {
   name: string;
