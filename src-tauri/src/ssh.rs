@@ -6,13 +6,14 @@ use tokio::io::AsyncWriteExt;
 pub struct Client {
 }
 
+#[async_trait::async_trait]
 impl client::Handler for Client {
     type Error = anyhow::Error;
     async fn check_server_key(
-        &mut self,
+        self,
         _server_public_key: &key::PublicKey,
-    ) -> Result<bool, Self::Error> {
-        Ok(true)
+    ) -> Result<(Self, bool), Self::Error> {
+        Ok((self, true))
     }
 }
 

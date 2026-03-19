@@ -7,9 +7,10 @@ interface Props {
   loading: boolean;
   onAction: (id: string, action: string) => void;
   onLogs: (id: string, name: string) => void;
+  onWebview?: (id: string, name: string, port: string) => void;
 }
 
-export const Dashboard: React.FC<Props> = ({ containers, loading, onAction, onLogs }) => {
+export const Dashboard: React.FC<Props> = ({ containers, loading, onAction, onLogs, onWebview }) => {
   if (loading && containers.length === 0) {
     return (
       <div style={{ color: '#8b949e', textAlign: 'center', padding: '4rem' }}>
@@ -34,6 +35,7 @@ export const Dashboard: React.FC<Props> = ({ containers, loading, onAction, onLo
           container={c} 
           onAction={onAction} 
           onLogs={onLogs} 
+          onWebview={onWebview}
         />
       ))}
     </div>

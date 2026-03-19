@@ -11,7 +11,12 @@ export function useContainers() {
     setLoading(true);
     setError(null);
     try {
-      const result: Container[] = await invoke("list_containers", server);
+      const result: Container[] = await invoke("list_containers", {
+        host: server.host,
+        port: server.port,
+        user: server.user,
+        password: server.password,
+      });
       setContainers(result);
     } catch (e: any) {
       setError(e.toString());
@@ -23,7 +28,14 @@ export function useContainers() {
   async function controlContainer(server: Server, id: string, action: string) {
     try {
       console.log(`${action}ing container ${id}...`);
-      await invoke("control_container", { ...server, id, action });
+      await invoke("control_container", {
+        host: server.host,
+        port: server.port,
+        user: server.user,
+        password: server.password,
+        id,
+        action,
+      });
       console.log(`Successfully ${action}ed container ${id}`);
       await fetchContainers(server);
     } catch (e: any) {

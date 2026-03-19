@@ -8,6 +8,7 @@ import { Server } from "./types";
 import { AddServerModal } from "./components/AddServerModal";
 import { LogViewer } from "./components/LogViewer";
 import { getCredentials, deleteCredentials } from "./hooks/useVault";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 function App() {
   const { containers, loading, error, fetchContainers, controlContainer, getLogs } = useContainers();
@@ -120,6 +121,18 @@ function App() {
                 const logs = await getLogs({ ...activeServer, password: activeServer.password }, id);
                 setCurrentLogs(logs);
                 setLogsLoading(false);
+              }
+            }}
+            onWebview={(_id: string, name: string, port: string) => {
+              if (activeServer) {
+                const url = `http://${activeServer.host}:${port}`;
+                new WebviewWindow(`container-${_id}`, {
+                  url,
+                  title: `${name} Web UI`,
+                  width: 1024,
+                  height: 768,
+                  center: true
+                });
               }
             }}
           />

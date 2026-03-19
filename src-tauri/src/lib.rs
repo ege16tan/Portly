@@ -82,9 +82,6 @@ async fn delete_credentials(
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_stronghold::Builder::new(|password| {
-             password.to_vec()
-        }).build())
         .setup(|app| {
             let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {

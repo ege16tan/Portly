@@ -23,4 +23,5 @@ russh = "0.40" # For SSH connection
 russh-keys = "0.40"
 anyhow = "1.0"
 futures = "0.3"
+async-trait = "0.1"
 

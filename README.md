@@ -1,5 +1,8 @@
 # Portly
 
+> [!WARNING]
+> **DEVELOPMENT STATUS**: This project is currently in active development and is not really working as intended yet. Use at your own risk.
+
 > Remote Docker management over SSH — built with Tauri, React & Rust.
 
 Portly is a lightweight desktop app that lets you monitor and control Docker containers on remote Linux servers via SSH. No agent, no open ports — just SSH.
