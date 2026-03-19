@@ -44,7 +44,9 @@ npm run tauri dev
 npm run tauri build
 ```
 
-The built installer will be in `src-tauri/target/release/bundle/`.
+The built executable and installers will be located in the following directories:
+- **Direct Executable:** `src-tauri/target/release/portly.exe`
+- **Installers (MSI/Setup EXE):** `src-tauri/target/release/bundle/`
 
 ---
 
